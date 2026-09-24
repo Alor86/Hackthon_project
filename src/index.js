@@ -1,5 +1,9 @@
 'use strict';
 
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+
 function main() {
   try {
     console.log('Project foundation is running successfully.');
@@ -15,4 +19,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { main };
+module.exports = { greet, main };
