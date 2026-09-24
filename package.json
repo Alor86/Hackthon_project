@@ -1,0 +1,19 @@
+{
+  "name": "hackthon-project",
+  "version": "0.1.0",
+  "description": "Hackathon project foundation",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test",
+    "test:watch": "node --test --watch"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}
