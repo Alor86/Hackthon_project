@@ -1,19 +1,27 @@
 {
-  "name": "hackthon-project",
+  "name": "campuscare-prototype",
   "version": "0.1.0",
-  "description": "Hackathon project foundation",
-  "main": "src/index.js",
+  "description": "CampusCare incident response prototype",
+  "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "node --watch src/index.js",
+    "start": "node server.js",
+    "dev": "node --watch server.js",
     "test": "node --test",
     "test:watch": "node --test --watch"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "keywords": [],
+  "keywords": [
+    "campuscare",
+    "safety",
+    "incident-response",
+    "hackathon"
+  ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.1"
+  }
 }

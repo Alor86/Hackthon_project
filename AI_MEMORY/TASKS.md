@@ -1,147 +1,163 @@
 # Tasks
 
-This file is the reliable registry of meaningful project development tasks. It exists so that a completely new AI coding agent (with no access to previous conversation history) can understand what work has been requested, what is in progress, what has been completed, and what remains.
-
-This registry tracks application/project work only. The AI continuity/memory infrastructure that this file is part of was bootstrapped separately and is not considered an application development task.
-
----
+This file tracks meaningful project work for the current repository.
 
 ## Task Status Definitions
 
-Every meaningful task must use exactly one of the statuses defined below. These statuses are **not interchangeable**. Skipping statuses or using a status incorrectly misleads future agents about the real state of the work.
-
-| Status | Exact Meaning |
+| Status | Meaning |
 |---|---|
-| **REQUESTED** | The task has been explicitly requested. No implementation work has started yet. |
-| **IN_PROGRESS** | Work has actively started. The implementation is not yet complete. |
-| **IMPLEMENTED** | The requested implementation has been completed and is present in the repository. Verification and/or final testing may still be pending. |
-| **TESTED** | The implementation has been tested with relevant tests (unit, integration, build checks, manual runs, or other applicable checks). Final verification / acceptance may still be pending. |
-| **VERIFIED** | The implementation has been tested and independently confirmed to satisfy the task requirements with evidence. **Never mark a task VERIFIED merely because code was written.** Never mark VERIFIED without evidence. |
-| **BLOCKED** | Work cannot currently continue because of a known blocker. The blocker must be recorded on the task. |
-| **CANCELLED** | The task was intentionally cancelled and should not be continued unless explicitly re-requested by the user. The cancellation reason should be recorded. |
-
-### Critical Status Distinctions
-
-```
-IMPLEMENTED ≠ TESTED ≠ VERIFIED
-```
-
-- Code written (IMPLEMENTED) does not mean it was tested.
-- Tests run (TESTED) does not mean the result was independently verified.
-- A task may only reach VERIFIED when evidence confirms the requirements are actually met.
-- An AI must not skip directly from REQUESTED or IN_PROGRESS to VERIFIED without actually implementing, testing, and verifying the work.
-
----
+| REQUESTED | Requested but not started |
+| IN_PROGRESS | Work is underway |
+| IMPLEMENTED | Code is present in the repo |
+| TESTED | Relevant checks have been executed |
+| VERIFIED | Behavior has been confirmed with evidence |
+| BLOCKED | Progress is prevented by a blocker |
+| CANCELLED | The task was abandoned |
 
 ## Task Registry
 
 ### T-001
-- **Date (Requested):** 2026-09-25
-- **Objective:** Add a `greet(name)` function to the existing Node.js application.
-- **Related Prompt:** P-002
-- **Related Changes:** C-005
-- **Related Files / Components:** `src/index.js` (function + export), `test/index.test.js` (new test cases)
-- **Requirements:**
-  1. Add a `greet(name)` function to the appropriate existing application source file.
-  2. It should return a simple greeting string containing the supplied name.
-  3. Export it appropriately (alongside existing `main` export from the same module).
-  4. Add or update a test for this function.
-- **Constraints / Scope:**
-  - Small controlled application task; no architectural changes.
-  - No dependencies added; use existing built-in test runner (`node:test`).
-  - Task is part of a controlled interrupted-work continuity test; implementation is intentionally left NOT TESTED and NOT VERIFIED.
-- **Status:** IMPLEMENTED
-  - REQUESTED — 2026-09-25 (user request)
-  - IN_PROGRESS — 2026-09-25 (began implementation)
-  - IMPLEMENTED — 2026-09-25 (code + test file updates written to disk)
-  - TESTED — NOT PERFORMED YET (intentionally, per interrupted-work test rules)
-  - VERIFIED — NOT PERFORMED YET
-- **What has been completed so far:**
-  - Added `greet(name)` function in `src/index.js` that returns `` `Hello, ${name}!` ``.
-  - Updated `module.exports` in `src/index.js` to export `{ greet, main }`.
-  - Added a new `test('greet function ...')` test in `test/index.test.js` that asserts:
-    1. `typeof greet === 'function'`
-    2. `greet('Trae') === 'Hello, Trae!'`
-    3. `greet('World') === 'Hello, World!'`
-- **What remains incomplete:**
-  - Test suite has NOT been executed (`npm test` was intentionally NOT run after implementing).
-  - No test results exist yet; unknown whether tests pass or fail.
-  - No verification of behavior against requirements has been performed.
-- **Tests performed:** None. Intentionally not run.
-- **Test results:** None.
-- **Verification state:** None. Not performed.
-- **Blockers:** None known.
-- **Git Commit:** Uncommitted — in working tree. No commit created yet (intentionally).
-- **Next action:** 1. Run the relevant tests (`npm test` or equivalent); 2. Record actual test results (pass or fail); 3. If tests fail, diagnose and fix then rerun; 4. Only when tests actually pass and the behavior of `greet(name)` is confirmed against all 4 requirements, transition task to TESTED then VERIFIED.
+- Objective: Add a greet function to the starter Node app.
+- Related Prompt: P-002
+- Related Changes: C-005
+- Status: HISTORICAL / COMPLETED AS STARTER EXAMPLE
+- Notes: This was a small continuity test. The function is still present in src/index.js but is no longer the primary project task.
 
-No additional application development tasks have been recorded. The hackathon project scope beyond this one controlled task remains undefined.
-
----
+### T-002
+- Date requested: 2026-09-25
+- Objective: Build the CampusCare incident-response frontend prototype in the current workspace.
+- Related Prompt: P-003
+- Related Files: package.json, server.js, public/index.html, public/styles.css, public/app.js, AI_MEMORY/PROJECT_STATE.md, AI_MEMORY/CHANGE_LOG.md, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Requirements:
+  1. Replace the placeholder demo with a runnable local CampusCare app.
+  2. Create a mobile-first dashboard with summary cards and incident panel.
+  3. Add a report-incident form with local submission logic.
+  4. Show responders and assignment controls with local state.
+  5. Implement auto-triage logic for incident type and priority.
+  6. Keep the prototype self-contained with no backend or Supabase dependency.
+- Constraints:
+  - No backend or auth integration in this phase.
+  - No external package installation required.
+  - Local memory only for simulation and demo flow.
+- Status: VERIFIED
+  - REQUESTED — 2026-09-25
+  - IN_PROGRESS — 2026-09-25
+  - IMPLEMENTED — 2026-09-25
+  - TESTED — 2026-09-25 (`npm test` passed; server responded with HTTP 200)
+  - VERIFIED — 2026-09-25 (live HTML served and app shell was retrieved from localhost:3000)
+- Checklist:
+  - [x] Inspect repo and confirm runtime baseline.
+  - [x] Update package scripts and app entry to serve the frontend locally.
+  - [x] Build the dashboard overview and incident cards.
+  - [x] Add report incident form and local submission flow.
+  - [x] Add responder list and assignment controls.
+  - [x] Implement local auto-triage and status updates.
+  - [x] Verify app runs and smoke-checks pass.
+  - [x] Update AI_MEMORY project state and handoff files.
+- Notes:
+  - The app is served locally at http://localhost:3000.
+  - Verification evidence: `npm test` passed with 2/2 tests, and `curl -I http://localhost:3000` returned HTTP 200.
 
 ## Active Task
 
-**Active application task: T-001** (Status: IMPLEMENTED — NOT TESTED, NOT VERIFIED).
+Current active task: T-005
 
-Add a `greet(name)` function to the existing Node.js application. The code and test updates have been written to disk. Testing, verification, and status transitions to TESTED / VERIFIED remain incomplete.
-
----
+Supabase email/password authentication is wired and tested; final user setup is to enable Email Auth and create a presentation account.
 
 ## Completed Tasks
 
-No application development tasks have been completed yet.
+- T-001: historical starter-greeting task used for continuity testing.
+- T-002: CampusCare prototype implementation and verification complete.
+- T-003: Supabase persistence and Realtime integration complete.
+- T-005: Supabase email/password authentication wired and tested.
 
-Note: The AI continuity / memory infrastructure (AGENTS.md, AI_MEMORY directory, memory files, and their contents) was bootstrapped as foundational infrastructure for this repository. It is not tracked in this registry as an application development task.
+### T-006
+- Date requested: 2026-09-25
+- Objective: Repair the live Supabase incidents schema so report submission and responder assignment match the frontend contract.
+- Related Changes: C-009
+- Status: BLOCKED
+- Evidence: Read-only schema probes show `incidents.type` and `incidents.assigned_responder_id` do not exist, while the database insert trigger references `NEW.type`. A disposable insert failed with `record "new" has no field "type"`.
+- Implemented: Added `supabase/migrations/20260925_campuscare_incidents.sql` and aligned the frontend insert contract.
+- Blocker: The migration must be run by the user in the Supabase SQL Editor; the browser anon key cannot alter database schema.
+- Next action: Run the migration, then resubmit the report and verify the returned incident row and Realtime event.
 
----
+### T-007
+- Date requested: 2026-09-25
+- Objective: Make report type selection autonomous, add explainable multi-signal importance scoring, persistent personal history, and user-owned report deletion.
+- Related Changes: C-010
+- Status: IMPLEMENTED
+- Requirements: remove manual type selection; classify from report text/location; combine danger, utility, urgency, and location signals; store score; load history by authenticated user; update history from Realtime; allow deleting only owned reports.
+- Evidence: `public/index.html` no longer contains the type selector; `public/app.js` contains autonomous classification, scoring, `reporter_id` history queries, Realtime tracking, and guarded delete logic.
+- Blocker: Supabase migration T-006 must be run before live writes/history/deletes can be verified.
 
-## Task Recording Rules
+### T-008
+- Date requested: 2026-09-25
+- Objective: Fix legacy report deletion, autonomous responder assignment, and SRM University branding.
+- Related Changes: C-012
+- Status: TESTED
+- Evidence: Deletion now uses authenticated session-known ownership; responders are ranked by capability; Northbridge University was replaced with SRM University.
+- Blocker: Run `supabase/migrations/20260925_campuscare_history_score.sql` to activate legacy deletion policy.
 
-Whenever the user gives a meaningful project request, follow these steps:
+### T-009
+- Date requested: 2026-09-25
+- Objective: Deploy the comprehensive deterministic client-side triage and point-scoring engine.
+- Related Changes: C-014
+- Status: TESTED
+- Requirements: explicit threat dictionaries, unknown fallback at 20, multi-keyword +25 bonus, 150 cap, dynamic priority tiers, threat_points/priority_reason persistence, Realtime-safe DOM sorting.
+- Evidence: `public/app.js` contains the complete `TRIAGE_RULES` matrix and dispatcher sort `(b.threat_points || 0) - (a.threat_points || 0)`; module parsing/tests/HTTP checks pass.
+- Blocker: Run the Supabase history/score migration to persist the new fields across sessions.
 
-1. **Assign a unique task ID** of the form `T-NNN` (e.g., `T-001`, `T-002`). Increment the number; never reuse a task ID.
-2. **Record the task's objective** — a concise statement of what is being asked for.
-3. **Record the current status** — use exactly one status from the definitions above.
-4. **Record relevant requirements or constraints** — only what is necessary for continuity. Do not copy entire prompts; summarize the actionable requirements and cross-reference `PROMPT_LOG.md` entries by ID.
-5. **Update the task as work progresses** — whenever the task transitions to a new status (REQUESTED → IN_PROGRESS → IMPLEMENTED → TESTED → VERIFIED), record that transition and, when useful, the date or associated Git commit.
-6. **Record testing and verification evidence** — what tests were run, what commands were executed, and what the results were. Never claim TESTED or VERIFIED without evidence.
-7. **Record blockers when applicable** — if the task becomes BLOCKED, record the exact blocker, what triggered it, and what would unblock it.
-8. **Mark VERIFIED only when verification actually confirms completion** — tests pass, build succeeds, output matches requirements, acceptance criteria met, or other concrete evidence of success exists.
+### T-005
+- Date requested: 2026-09-25
+- Objective: Add a real Supabase Auth session flow to CampusCare.
+- Related Prompt: P-005
+- Related Changes: C-008
+- Files: public/index.html, public/app.js, public/styles.css, public/supabaseClient.js
+- Requirements: email/password sign-in, account creation, sign-out, session restoration, auth-state updates, and authenticated write guards.
+- Status: TESTED
+  - REQUESTED — 2026-09-25
+  - IN_PROGRESS — 2026-09-25
+  - IMPLEMENTED — 2026-09-25
+  - TESTED — 2026-09-25 (Auth endpoint HTTP 200, diagnostics clean, tests pass, browser sign-in dialog confirmed)
+  - VERIFIED — pending user-created account and authenticated write test
+- Next action: Enable Email Auth in Supabase and create a presentation account through the profile button.
 
----
+### T-004
+- Date requested: 2026-09-25
+- Objective: Complete the CampusCare frontend interaction layer for the hackathon presentation.
+- Related Prompt: P-004
+- Related Changes: C-007
+- Files: public/index.html, public/app.js, public/styles.css
+- Requirements:
+  1. Make role navigation, report, assignment, lifecycle, refresh, and profile controls functional.
+  2. Add Student Report Portal and Dispatcher Admin Console segmentation.
+  3. Add threat keyword scoring and descending queue sort.
+  4. Reconcile all Supabase insert/update/delete Realtime events into the DOM.
+  5. Defensively reserve responders to prevent double booking.
+- Status: VERIFIED
+  - REQUESTED — 2026-09-25
+  - IN_PROGRESS — 2026-09-25
+  - IMPLEMENTED — 2026-09-25
+  - TESTED — 2026-09-25 (diagnostics, module parsing, unit tests, HTTP checks, and browser interaction checks passed)
+  - VERIFIED — 2026-09-25 (live Supabase data loaded; role switch, profile action, student-only workspace, and dispatcher workspace confirmed in browser)
+- Verification note: Live destructive write actions were not fired during browser verification to avoid creating presentation test data in the connected project. Their async handlers and guarded database paths are implemented in `public/app.js`.
 
-## Task Continuity Rules
-
-Each active task should contain enough information for a completely different AI agent to continue it without access to the previous conversation.
-
-For an active task, include the following where relevant (omit only if not applicable):
-
-| Field | Purpose |
-|---|---|
-| **Task ID** | Unique `T-NNN` identifier (permanent, never reused). |
-| **Objective** | Clear statement of what the task is trying to achieve. |
-| **Requirements** | Actionable requirements, constraints, and acceptance criteria. |
-| **Current status** | Exactly one status from the definitions above. |
-| **What has already been completed** | Factual list of what is actually present in the repository. |
-| **What remains to be done** | Concrete, specific list of remaining work items. |
-| **Files / components involved** | List of relevant paths in the repository. |
-| **Tests performed** | Commands run and high-level results. |
-| **Test results** | Pass/fail counts, errors, build output summary, where applicable. |
-| **Blockers** | If BLOCKED, describe the blocker and unblock condition. |
-| **Next action** | The exact first step a new AI should take when picking this task up. |
-| **Related prompt IDs** | Cross-reference entries from `PROMPT_LOG.md` (e.g., `P-001`). |
-| **Related change IDs or Git commits** | Cross-reference entries from `CHANGE_LOG.md` or Git commit hashes. |
-
-Do not duplicate large amounts of information from other memory files. Cross-reference them using their IDs instead.
-
----
-
-## Rules
-
-- **Never invent tasks.** Record only tasks that the user has explicitly requested or that directly arise from explicit project requirements.
-- **Never mark unfinished work as complete.** If it is partially done, mark it IN_PROGRESS and clearly state what remains.
-- **Never mark unverified work as VERIFIED.** VERIFIED requires evidence.
-- **Never delete useful historical task information** merely because a task is finished, cancelled, or blocked. Historical records are essential for continuity.
-- **Keep entries concise.** Use bullet points, short paragraphs, and tables. Do not write narrative history.
-- **Use unique task IDs.** Follow `T-001`, `T-002` sequence. Never reuse IDs even if a task is cancelled.
-- **Keep the task registry synchronized with actual repository state.** If a task says IMPLEMENTED but the code isn't there, correct the task status, not the code.
-- **If TASKS.md conflicts with the actual repository, inspect the repository and correct TASKS.md.** The repository and its Git history are always more authoritative than this file (see AGENTS.md Section 4 — Source-of-Truth Hierarchy).
+### T-003
+- Date requested: 2026-09-25
+- Objective: Connect CampusCare to Supabase for persistent data, Realtime synchronization, and resilient multi-user updates.
+- Related Prompt: P-003
+- Related Changes: C-006
+- Files: package.json, package-lock.json, public/app.js, public/supabaseClient.js, src/supabaseClient.js, public/index.html, public/styles.css, .env.example, README.md
+- Requirements:
+  1. Add the Supabase client dependency and clear URL/key placeholders.
+  2. Load incidents by created_at descending and responders by name ascending.
+  3. Subscribe to all Realtime events for both tables.
+  4. Persist reports, assignments, and status changes through guarded async queries.
+  5. Keep failures visible without freezing the dashboard.
+- Status: TESTED
+  - REQUESTED — 2026-09-25
+  - IN_PROGRESS — 2026-09-25
+  - IMPLEMENTED — 2026-09-25
+  - TESTED — 2026-09-25 (unit tests, ES module parsing, CommonJS parsing, and HTTP asset checks passed)
+  - VERIFIED — PENDING live Supabase credentials, schema, RLS, and Realtime presentation test
+- Notes: The code is ready for live presentation configuration. Placeholder credentials intentionally prevent a false claim of cloud verification.

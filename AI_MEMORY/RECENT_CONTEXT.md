@@ -25,54 +25,27 @@ This file is a compact, short-term memory of the most recent meaningful project 
 
 ---
 
+# Recent Context
+
 ## Current Context
 
-The most recent meaningful events, newest first:
+- Supabase integration is implemented in `public/app.js`, `public/supabaseClient.js`, and `src/supabaseClient.js`.
+- The app fetches incidents/responders, subscribes to all Realtime events for both tables, inserts reports, updates assignments in parallel, and persists status changes.
+- Local verification evidence: `npm test` passed (2/2); browser and Node syntax checks passed; `/`, `/app.js`, and `/supabaseClient.js` returned HTTP 200.
+- Placeholder Supabase credentials remain intentionally unchanged. Live cloud verification is pending configuration, schema, RLS, and Realtime setup.
+- Completion pass verified in browser: live responders loaded, role tabs switched DOM views, profile action showed feedback, and student mode hid dispatcher metrics.
+- Current status: presentation-ready. Insert, assignment, and status handlers are implemented and guarded; no destructive live write was issued during verification.
+- Supabase Auth is now wired with email/password sign-in, sign-up, sign-out, session restoration, and authenticated write guards. Auth settings endpoint returned HTTP 200; no account was created by the agent.
+- Report submission diagnosis: live REST probes show `incidents.type` and `incidents.assigned_responder_id` are missing, while the database trigger references `NEW.type`; the attempted disposable insert failed for that schema mismatch.
+- Added `supabase/migrations/20260925_campuscare_incidents.sql` to repair the columns and Realtime publication.
+- Live schema recheck: `type` and `assigned_responder_id` now return HTTP 200, but `reporter_id` and `threat_score` still return HTTP 400. Added follow-up migration `supabase/migrations/20260925_campuscare_history_score.sql`.
+- Report submission now retries with the legacy supported payload when Supabase rejects missing `reporter_id` or `threat_score`, so the current partially migrated schema can still accept reports.
+- Triage scoring upgrade: `TRIAGE_RULES` now covers critical/high/medium/low dictionaries, defaults unknown text to 20, adds +25 for multiple matches, caps at 150, emits `threat_points`/`priority_reason`, and sorts the dispatcher queue by points descending.
+- Removed manual incident type selection. Reports are now autonomously classified from description/location and scored using danger, utility, urgency, and location signals.
+- Added authenticated persistent history by `reporter_id`, Realtime history tracking, and delete-own-report behavior.
+- Fixed legacy report deletion by allowing known session-owned rows to delete by ID; the follow-up migration includes cleanup policy for legacy rows without `reporter_id`.
+- Fixed autonomous responder assignment by ranking capabilities from responder name, role, and type. Updated campus branding to SRM University.
 
-- **Second/final AI continuity test in progress: controlled interrupted-task handoff.**
-  - Prompt: `P-002` (related task: `T-001`; related change: `C-005`).
-  - Task T-001 objective: *"Add a greet(name) function to the existing Node.js application."*
-  - Current status of T-001: **IMPLEMENTED ONLY.**
-    - ✅ Code written: `greet(name)` added to `src/index.js`; exported as `{ greet, main }`.
-    - ✅ Test code written: new test case + assertions added to `test/index.test.js`.
-    - ❌ **TESTED:** NOT PERFORMED. Test suite (`npm test`) intentionally NOT RUN after implementing.
-    - ❌ **VERIFIED:** NOT PERFORMED. No runtime or behavioral verification against requirements.
-  - Critical status reminder: **IMPLEMENTED ≠ TESTED ≠ VERIFIED.** Fresh incoming AI must distinguish these.
-- **AI continuity memory files all fully populated (updated to include T-001 / P-002 / C-005):**
-  - `AGENTS.md` (unchanged since `C-001`)
-  - `AI_MEMORY/PROJECT_STATE.md` (updated to reflect greet status IMPLEMENTED/NOT TESTED/NOT VERIFIED)
-  - `AI_MEMORY/TASKS.md` (first real task T-001 added; Active Task = T-001)
-  - `AI_MEMORY/PROMPT_LOG.md` (second prompt P-002 added, linked to T-001)
-  - `AI_MEMORY/CHANGE_LOG.md` (fifth change C-005 added, IMPLEMENTED)
-  - `AI_MEMORY/RECENT_CONTEXT.md` (this file, current update)
-  - `AI_MEMORY/HANDOFF.md` (being rewritten/updated with the interrupted-task handoff snapshot)
-- **Starting state before this interrupted-task test:** Node.js skeleton, 1 commit (`e6aafed`), smoke test 1/1 passing, no app tasks/features defined. The earlier observation-only continuity test (first test) was completed successfully.
-- **Application status (overall):** Only one application task has ever been defined/started (`T-001` above). No hackathon idea, architecture, framework, database, API, auth, UI, or integration has been selected, defined, or implemented beyond the untested `greet(name)` implementation.
-- **Known issues / blockers:** None recorded. Task T-001 is untested/unverified not because of a blocker but because this is a deliberate controlled stop.
-- **Git state:** All changes (src/test/AI_MEMORY updates for T-001) are **uncommitted — in working tree.** No commit created yet (intentionally per P-002).
+## Immediate Next Action
 
----
-
-## Immediate Takeover Context
-
-For a fresh AI opening this repository right now (interrupted-task handoff):
-
-| Question | Answer |
-|---|---|
-| **Current project state** | Node.js application skeleton plus one deliberately incomplete app task. First real task `T-001` (`greet(name)`) is IMPLEMENTED (code + test files written) but **NOT TESTED** and **NOT VERIFIED**. All AI memory files have been updated to reflect this incomplete state accurately. |
-| **Current active application task** | **T-001** — Add a `greet(name)` function to the existing Node.js application. Status = IMPLEMENTED (not TESTED, not VERIFIED). |
-| **Last meaningful work completed** | Implemented `greet(name)` + its test assertions in source/test files; updated all 6 AI memory files (TASKS/PROMPT_LOG/CHANGE_LOG/PROJECT_STATE/RECENT_CONTEXT/HANDOFF) to the IMPLEMENTED-but-untested state with clear next steps. |
-| **Known blockers** | None currently recorded. The task is untested/unverified by deliberate design (controlled interrupted work), not due to a blocker. |
-| **Next action** | 1. **Run the test suite** with `npm test`; capture actual output. Do NOT assume tests pass. 2. Update T-001 in `TASKS.md`: set to TESTED with actual results, and if tests pass then verify behavior vs requirements → VERIFIED. If tests fail, diagnose, fix, rerun. 3. Update `CHANGE_LOG.md` C-005 Tests/Verification/Git Commit fields with actual outcome and commit SHA if committed. 4. Update `RECENT_CONTEXT.md` and `PROJECT_STATE.md` and `HANDOFF.md` to reflect the resulting state. 5. Commit if safe/acceptable state is reached. |
-
----
-
-## Maintenance Rules
-
-For every future AI agent working with this file:
-
-- **Keep only the most useful recent context.** As work progresses forward, old events that no longer influence the immediate next step should be pruned or compressed into a one-line summary.
-- **Replace obsolete entries rather than endlessly appending.** This file should stay compact; if a later change supersedes an earlier one, update or remove the earlier entry rather than keeping both.
-- **Update this file at meaningful checkpoints:** after transitioning a task to a new status, after discovering or clearing a blocker, after a test run whose result matters, after making an important design decision, and **always before handoff** (especially if the current AI may stop due to token/context limits).
-- **Every important fact here should be traceable to an authoritative source:** `PROJECT_STATE.md`, `TASKS.md`, `CHANGE_LOG.md`, `PROMPT_LOG.md`, Git, or the actual code/tests on disk. If a fact exists only here and nowhere else, something is wrong — record it properly in the correct higher-authority file.
-- **Never use recent context to hide uncertainty or incomplete work.** If something is half-done, blockered, or unverified, say so plainly. The purpose of this file is accurate, honest continuity — not making the state of things look better than it is.
+Run the history/score follow-up migration in the Supabase SQL Editor, then sign in and test fire, stolen, leak, and random descriptions at http://localhost:3000.

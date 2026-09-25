@@ -115,6 +115,35 @@ Every recorded prompt should follow this consistent format. Omit optional fields
 - **Related Changes:** C-005
 - **Status:** Active (in progress — implementation done; testing and verification deliberately not performed per continuity-test rules)
 
+### P-003
+- Date: 2026-09-25
+- Related Task: T-003
+- Type: Feature Request / Cloud Integration
+- User Request: Connect the CampusCare frontend directly to Supabase for persistent records, Realtime synchronization, parallel-safe assignment updates, and guarded async form/status operations.
+- Requirements:
+  - Install and initialize @supabase/supabase-js with easy-to-replace URL and anon-key placeholders.
+  - Load incidents and responders from Supabase in deterministic order.
+  - Subscribe to all incident and responder table events.
+  - Persist report inserts, responder assignment, and incident lifecycle changes.
+  - Update AI_MEMORY tracking files accurately.
+- Constraints:
+  - Preserve the existing vanilla static frontend architecture.
+  - Do not expose a service-role key.
+  - Priority and reason are calculated by the database trigger, not submitted by the form.
+- Resulting Action: Implemented browser and Node Supabase bridges, live queries, Realtime channels, async mutations, error toasts, setup documentation, and memory tracking updates.
+- Related Changes: C-006
+- Status: Fulfilled locally; live cloud presentation verification pending configuration
+
+### P-004
+- Date: 2026-09-25
+- Related Task: T-004
+- Type: Feature Request / Presentation Completion
+- User Request: Make CampusCare fully interactive and presentation-ready with working controls, student/dispatcher views, threat scoring, Realtime DOM sync, and collision-safe assignments.
+- Requirements: Every visible control must work; student mode must show report/history; dispatcher mode must show queue/roster/threat metrics; threat scores must sort the queue; Realtime events must rerender the DOM; responder assignments must avoid double booking; metadata must record completion.
+- Resulting Action: Rewrote `public/index.html` and `public/app.js`, extended `public/styles.css`, verified the live page in browser, and updated all AI_MEMORY tracking files.
+- Related Changes: C-007
+- Status: Fulfilled
+
 ---
 
 ## Rules for Future Agents

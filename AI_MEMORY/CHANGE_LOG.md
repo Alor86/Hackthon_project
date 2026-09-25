@@ -212,3 +212,105 @@ No prior application feature changes existed before C-005.
 - If work is still **uncommitted**, that must be stated explicitly. Never invent or guess a commit hash.
 - Before a major handoff or when the repository is in a safe clean state, an AI should commit completed work and record the resulting commit SHA in the corresponding change entry.
 - If a change is later reverted, update its status to `REVERTED` and link to the reverting change (e.g., "Reverted by C-123").
+
+### C-006
+- Date: 2026-09-25
+- Related Task: T-003
+- Related Prompt: P-003
+- Status: TESTED
+- Files Changed: package.json, package-lock.json, public/index.html, public/app.js, public/supabaseClient.js, public/styles.css, src/supabaseClient.js, .env.example, README.md, AI_MEMORY/PROJECT_STATE.md, AI_MEMORY/TASKS.md, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Change: Added @supabase/supabase-js and connected the CampusCare browser dashboard to Supabase REST and Realtime. Incidents and responders load from ordered queries; all table events reconcile into the UI; reports, assignments, and status changes use guarded async database operations.
+- Tests: `npm test` passed with 2/2 tests. Browser ES module syntax checks, Node CommonJS syntax check, and HTTP checks for `/`, `/app.js`, and `/supabaseClient.js` passed.
+- Verification: Local implementation verified. Live cloud behavior is pending real project credentials, schema, RLS policies, database trigger, and Realtime publication.
+- Git Commit: Uncommitted — in working tree
+- Notes: Placeholder URL and anon key are intentionally present in `public/supabaseClient.js`; never use a service-role key in the browser.
+
+### C-007
+- Date: 2026-09-25
+- Related Task: T-004
+- Related Prompt: P-004
+- Status: VERIFIED
+- Files Changed: public/index.html, public/app.js, public/styles.css, AI_MEMORY/TASKS.md, AI_MEMORY/PROJECT_STATE.md, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Change: Rebuilt the frontend interaction layer with Student Report Portal and Dispatcher Admin Console views, working role/profile/refresh/report/assignment/status controls, personal session history, keyword threat scoring, score-first queue sorting, Realtime DOM reconciliation, and conditional responder locking.
+- Tests: Browser page opened at localhost:3000; live responders loaded from Supabase; role tabs switched views; student mode showed report/history only; dispatcher mode showed queue, roster, and threat metrics; profile action displayed status feedback. Module parsing, diagnostics, npm tests, and HTTP checks also passed.
+- Verification: Presentation behavior verified in the browser. Live write handlers were not executed against the connected project to avoid creating disposable incidents or changing responder availability.
+- Git Commit: Uncommitted — in working tree
+- Notes: The application is presentation-ready at http://localhost:3000.
+
+### C-008
+- Date: 2026-09-25
+- Related Task: T-005
+- Related Prompt: P-005
+- Status: TESTED
+- Files Changed: public/index.html, public/app.js, public/styles.css, README.md, AI_MEMORY/PROJECT_STATE.md, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Change: Added Supabase email/password authentication UI, session restoration, auth-state synchronization, sign-out, and authenticated write guards for reports, assignments, and status updates.
+- Tests: No diagnostics found; browser module parsing passed; `npm test` passed 2/2; dashboard and app asset HTTP checks returned 200; Supabase Auth settings endpoint returned HTTP 200.
+- Verification: Auth service reachability and frontend wiring tested. No account was created and no authenticated write was executed by the agent.
+- Git Commit: Uncommitted — in working tree
+- Notes: The user must enable Email Auth in Supabase and create a presentation account through the profile button.
+
+### C-009
+- Date: 2026-09-25
+- Related Task: T-006
+- Related Prompt: Current report-submission failure
+- Status: BLOCKED
+- Files Changed: public/app.js, README.md, supabase/migrations/20260925_campuscare_incidents.sql, AI_MEMORY/TASKS.md, AI_MEMORY/PROJECT_STATE.md, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Change: Diagnosed the live Supabase schema/trigger mismatch, restored the intended three-field report contract, and added a migration for `type`, `assigned_responder_id`, `reason`, numeric priority conversion, and Realtime publication.
+- Tests: Read-only schema probes passed for existing columns and identified missing columns. Disposable insert reproduced the failure: `record "new" has no field "type"`.
+- Verification: Blocked until the user runs the migration in Supabase SQL Editor. The browser anon client cannot apply schema changes.
+- Git Commit: Uncommitted — in working tree
+
+### C-010
+- Date: 2026-09-25
+- Related Task: T-007
+- Related Prompt: Current autonomous reporting request
+- Status: IMPLEMENTED
+- Files Changed: public/index.html, public/app.js, public/styles.css, supabase/migrations/20260925_campuscare_incidents.sql, README.md, AI_MEMORY/TASKS.md, AI_MEMORY/PROJECT_STATE.md, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Change: Removed manual incident type selection; added autonomous classification and explainable multi-signal threat scoring; added authenticated Supabase history loading, Realtime history tracking, and user-owned report deletion.
+- Tests: Diagnostics clean, browser module parse passed, npm tests passed 2/2, dashboard/app HTTP checks returned 200, and source audit confirmed the old incident type selector is absent.
+- Verification: Local implementation tested. Live submission/history/delete remain blocked until T-006 migration is run in Supabase.
+- Git Commit: Uncommitted — in working tree
+
+### C-011
+- Date: 2026-09-25
+- Related Task: T-007
+- Related Prompt: Current autonomous reporting request
+- Status: BLOCKED
+- Files Changed: supabase/migrations/20260925_campuscare_history_score.sql, README.md, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Change: Added a follow-up migration for the missing `reporter_id` and `threat_score` columns after live schema probing showed the first migration had been applied only partially.
+- Tests: Live REST schema check: `type` and `assigned_responder_id` HTTP 200; `reporter_id` and `threat_score` HTTP 400. Frontend diagnostics and tests remain passing.
+- Verification: Blocked until the follow-up migration is run in Supabase SQL Editor.
+- Git Commit: Uncommitted — in working tree
+
+### C-012
+- Date: 2026-09-25
+- Related Task: T-008
+- Related Prompt: Current deletion, assignment, and branding request
+- Status: TESTED
+- Files Changed: public/index.html, public/app.js, supabase/migrations/20260925_campuscare_history_score.sql, README.md, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Change: Updated branding to SRM University, made report deletion compatible with known legacy session-owned rows, and replaced first-available responder fallback with capability-based autonomous assignment ranking.
+- Tests: Pending final local validation; live deletion policy requires the follow-up migration.
+- Verification: Frontend implementation complete. Supabase policy verification requires running the follow-up migration.
+- Git Commit: Uncommitted — in working tree
+
+### C-013
+- Date: 2026-09-25
+- Related Task: T-006/T-007
+- Related Prompt: Report submission failure with missing reporter_id
+- Status: TESTED
+- Files Changed: public/app.js, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Change: Added a controlled Supabase schema fallback that retries report insertion with the legacy supported columns when `reporter_id` or `threat_score` is absent from the schema.
+- Tests: Browser module parsing passed, npm tests passed 2/2, dashboard and app asset checks returned HTTP 200.
+- Verification: Code path tested locally; authenticated live submission should be retried from the current browser. Full persistent history still requires the follow-up migration.
+- Git Commit: Uncommitted — in working tree
+
+### C-014
+- Date: 2026-09-25
+- Related Task: T-009
+- Related Prompt: Comprehensive Triage & Point-Scoring Engine request
+- Status: TESTED
+- Files Changed: public/app.js, README.md, AI_MEMORY/RECENT_CONTEXT.md, AI_MEMORY/HANDOFF.md
+- Change: Replaced the partial score logic with the complete deterministic critical/high/medium/low dictionary, 20-point fallback, +25 multi-keyword bonus, 150-point cap, explicit priority reasons, and threat_points-first dispatcher sorting.
+- Tests: Browser module parsing passed, npm tests passed 2/2, dashboard returned HTTP 200, and source audit confirmed TRIAGE_RULES, threat_points, priority_reason, and descending sort paths.
+- Verification: Local implementation tested. Full persisted scoring requires the Supabase follow-up migration for threat_points and priority_reason.
+- Git Commit: Uncommitted — in working tree

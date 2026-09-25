@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CampusCare | Incident response</title>
+    <meta name="description" content="CampusCare campus incident response portal" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-block">
+          <div class="brand-mark">+</div>
+          <div><strong>CampusCare</strong><span>Campus safety desk</span></div>
+        </div>
+        <div class="status-box"><strong>Desk online</strong><span id="connectionStatus">Connecting to live board</span></div>
+        <div class="campus-info"><span>SRM University</span><small>Safety operations</small></div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div class="crumbs"><span>CampusCare</span><span>/</span><strong id="viewCrumb">Student portal</strong></div>
+          <div class="topbar-actions"><span class="chip" id="syncChip">Live sync</span><span class="auth-chip" id="authStatus">Signed out</span><button id="profileBtn" class="avatar-btn" type="button" aria-label="Open account">SD</button></div>
+        </header>
+
+        <nav class="role-switcher" aria-label="Choose application view" role="tablist">
+          <button id="studentViewBtn" class="role-tab active" type="button" role="tab" aria-selected="true">Student Report Portal</button>
+          <button id="dispatcherViewBtn" class="role-tab" type="button" role="tab" aria-selected="false">Dispatcher Admin Console</button>
+        </nav>
+
+        <section class="hero">
+          <div class="hero-copy"><p id="todayLabel"></p><h1 id="heroTitle">Report a campus concern</h1><p id="heroDescription">Send a report to the safety desk and keep track of its progress.</p></div>
+          <button id="reportIncidentBtn" class="primary-btn" type="button">+ Report incident</button>
+        </section>
+
+        <section class="summary-grid" id="summaryGrid" aria-label="Incident summary"></section>
+
+        <section id="studentView" class="view-section" aria-labelledby="studentViewTitle">
+          <div class="student-grid">
+            <section class="panel report-panel">
+              <div class="panel-header"><div><h2 id="studentViewTitle">Report an incident</h2><p>Your report is routed to the live safety desk.</p></div><span class="pulse-dot">Live</span></div>
+              <form id="incidentForm" class="incident-form">
+                <div class="ai-assist-note"><strong>Autonomous triage</strong><span>CampusCare classifies the report and calculates its threat score from the description and location.</span></div>
+                <label><span>Location</span><input id="incidentLocation" name="location" type="text" placeholder="e.g. Library, 2nd floor" required /></label>
+                <label><span>Description</span><textarea id="incidentDescription" name="description" rows="5" placeholder="Describe what happened" required></textarea></label>
+                <button type="submit" class="primary-btn full-width">Submit report</button>
+              </form>
+            </section>
+            <section class="panel timeline-panel">
+              <div class="panel-header"><div><h2>My Incident History Log</h2><p>Reports submitted from this browser session.</p></div><span class="muted-count" id="historyCount">0</span></div>
+              <div id="historyList" class="timeline-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="dispatcherView" class="view-section hidden" aria-labelledby="dispatcherViewTitle">
+          <div class="panel incidents-panel" id="incidents">
+            <div class="panel-header"><div><h2 id="dispatcherViewTitle">Global active queue</h2><p>Threat-scored incidents sorted highest to lowest.</p></div><div class="panel-actions"><span class="muted-count" id="incidentCountBadge">0</span><button id="refreshBtn" class="secondary-btn" type="button">Refresh queue</button></div></div>
+            <div id="incidentsList" class="incident-list"></div>
+          </div>
+          <div class="dispatcher-lower-grid">
+            <aside class="panel responders-panel" id="responders"><div class="panel-header compact"><div><h2>Live responder roster</h2><p>Busy units are unavailable for assignment.</p></div><span class="muted-count" id="responderCount">0</span></div><div id="responderList" class="responder-list"></div><div class="pulse-box"><strong>Coverage</strong><span id="availableCoverageText">0 responders available</span></div></aside>
+            <section class="panel pulse-panel"><div class="panel-header compact"><div class="pulse-icon">!</div><div><h2>Threat assessment</h2><p>Automated keyword scoring.</p></div></div><div id="threatMetrics" class="pulse-metrics"></div></section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="authModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-auth-close="true"></div>
+      <section class="modal-card auth-card" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+        <div class="modal-header"><div><h2 id="authTitle">Sign in to CampusCare</h2><p id="authDescription">Use your campus email to submit reports and operate the dispatch console.</p></div><button id="authCloseBtn" class="close-btn" type="button" aria-label="Close account dialog">×</button></div>
+        <form id="authForm" class="incident-form">
+          <label><span>Email</span><input id="authEmail" type="email" autocomplete="email" required placeholder="you@campus.edu" /></label>
+          <label><span>Password</span><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters" /></label>
+          <div class="form-actions"><button id="authModeBtn" class="secondary-btn" type="button">Create account</button><button id="authSubmitBtn" class="primary-btn" type="submit">Sign in</button></div>
+        </form>
+      </section>
+    </div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
